@@ -1,4 +1,11 @@
 [versions]
+
+androidx-core = "1.12.0"
+androidx-lifecycle = "2.6.2"
+androidx-compose = "1.5.3"
+androidx-material3 = "1.2.0"
+androidx-activity-compose = "1.7.2"
+
 agp = "8.6.0"
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
@@ -11,6 +18,13 @@ activity = "1.10.1"
 constraintlayout = "2.2.1"
 
 [libraries]
+
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "androidx-compose" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "androidx-material3" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
+
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
