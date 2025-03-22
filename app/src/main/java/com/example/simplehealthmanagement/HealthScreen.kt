@@ -12,9 +12,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
 
-
+// UI Entrance
 @Composable
 fun HealthScreen(viewModel: HealthViewModel) {
+    // Observe data flow (collectAsState)
     val temperature by viewModel.temperature.collectAsState()
     val heartRate by viewModel.heartRate.collectAsState()
     val bloodPressure by viewModel.bloodPressure.collectAsState()
@@ -58,6 +59,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
     }
 }
 
+// A reusable card in Health Screen UI
 @Composable
 fun VitalSignCard(title: String, value: String, textColor: Color, modifier: Modifier = Modifier) {
     Card(
@@ -76,6 +78,7 @@ fun VitalSignCard(title: String, value: String, textColor: Color, modifier: Modi
     }
 }
 
+// Allow a preview of the screen in the design view in Android Studio without running the app
 @Preview(showBackground = true)
 @Composable
 fun PreviewHealthScreen() {
