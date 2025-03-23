@@ -56,10 +56,10 @@ fun HealthScreen(viewModel: HealthViewModel) {
     val bloodPressureStatus = viewModel.getBloodPressureStatus(systolicBloodPressure, diastolicBloodPressure)
 
     val vitalStatuses = listOf(
-        "我的体温" to temperatureStatus,
-        "实时心率" to heartRateStatus,
-        "血样浓度" to bloodOxygenStatus,
-        "我的血压" to bloodPressureStatus
+        "体温" to temperatureStatus,
+        "心率" to heartRateStatus,
+        "血氧浓度" to bloodOxygenStatus,
+        "血压" to bloodPressureStatus
     )
 
     val abnormalStatuses = vitalStatuses.filter { it.second != "正常" }
@@ -284,7 +284,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 VitalCardWithSwitch(
-                    title = "血样浓度",
+                    title = "血氧浓度",
                     value = "$spo2 %",
                     status = bloodOxygenStatus,
                     switchState = isBloodOxygenSwitchOn,
