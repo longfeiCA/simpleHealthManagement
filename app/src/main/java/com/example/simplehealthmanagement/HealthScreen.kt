@@ -19,6 +19,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -48,6 +50,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
         unselectedIconColor = Color.White.copy(alpha = 0.3f),
         unselectedTextColor = Color.Black.copy(alpha = 0.3f)
     )
+
 
     Scaffold(
         bottomBar = {
@@ -279,10 +282,20 @@ fun VitalCardWithSwitch(
     onSwitchChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val switchColors = SwitchDefaults.colors(
+        checkedThumbColor = Color.White, // 选中时滑块颜色
+        uncheckedThumbColor = Color.White, // 未选中时滑块颜色
+        checkedTrackColor = Color(0xFF64A7E8), // 选中时轨道颜色
+        uncheckedTrackColor = Color.Gray, // 未选中时轨道颜色
+        checkedBorderColor = Color.Transparent, // 选中时边框颜色
+        uncheckedBorderColor = Color.Transparent, // 未选中时边框颜色
+    )
+
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(210.dp),
+            .height(210.dp)
+            .background(Color.Red),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -294,7 +307,13 @@ fun VitalCardWithSwitch(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Switch(checked = switchState, onCheckedChange = onSwitchChange)
+                Switch(
+                    checked = switchState,
+                    onCheckedChange = onSwitchChange,
+                    modifier= Modifier.scale(1f),
+                    colors = switchColors
+                )
+
                 Text(text = "更多", style = MaterialTheme.typography.bodyMedium)
             }
             Spacer(modifier = Modifier.height(8.dp))
