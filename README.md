@@ -74,3 +74,10 @@ Gradle 插件:
 
 本次开发中未使用到测试工具。
 
+## 程序运行截图
+
+<p align="center">
+  <img src="screenshots/normal.png" alt="Normal" style="max-width: 30%;">
+  <img src="screenshots/alert.png" alt="Alert" style="max-width: 30%;">
+  <img src="screenshots/multiple_alerts.png" alt="Multiple Alerts" style="max-width: 30%;">
+</p>
