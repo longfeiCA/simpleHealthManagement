@@ -55,6 +55,7 @@ class HealthViewModel : ViewModel() {
         startUpdatingData()
     }
 
+    // Random data generation 随机数据生成
     private fun startUpdatingData() {
         viewModelScope.launch {
             while (true) {
@@ -66,10 +67,12 @@ class HealthViewModel : ViewModel() {
                 _stepCount.value = Random.nextInt(1000, 5000)
                 _frostbiteRisk.value = Random.nextInt(0, 5) * 20
 
-                delay(5000) // 每5秒更新一次
+                delay(5000) // update every 5 seconds 每5秒更新一次
             }
         }
     }
+
+    // Normal/Abnormal Conditions 正常/不正常状态判断
 
     fun getTemperatureStatus(temperature: Double): String {
         return when {

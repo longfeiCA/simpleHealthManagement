@@ -3,7 +3,6 @@ package com.example.simplehealthmanagement
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -34,9 +33,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-// UI Entrance
+
+// UI base component
 @Composable
 fun HealthScreen(viewModel: HealthViewModel) {
+    // Extract state variables from the ViewModel
     val temperature by viewModel.temperature.collectAsState()
     val heartRate by viewModel.heartRate.collectAsState()
     val systolicBloodPressure by viewModel.systolicBloodPressure.collectAsState()
@@ -60,6 +61,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
     )
     val abnormalStatuses = vitalStatuses.filter { it.second != "正常" }
     val hasAbnormalStatus = abnormalStatuses.isNotEmpty()
+
     // UI parameters
     val navigationItemColors = NavigationBarItemDefaults.colors(
         selectedIconColor = Color.Black,
@@ -68,7 +70,10 @@ fun HealthScreen(viewModel: HealthViewModel) {
         unselectedTextColor = Color.Black.copy(alpha = 0.3f)
     )
     val scrollState = rememberScrollState()
+
+    // Start of UI structure 用户界面结构开始
     Scaffold(
+        // Navigation bar 导航栏
         bottomBar = {
             NavigationBar(containerColor = Color(0xFF64A7E8)) {
                 NavigationBarItem(
@@ -95,6 +100,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
             }
         }
     ) { paddingValues ->
+        // Whole Screen (except nav bar) 除了导航栏整个屏幕
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -103,12 +109,12 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (hasAbnormalStatus) {
-                // Show alert card
+            if (hasAbnormalStatus) { // 判断是否有异常情况
+                // Show alert card 展示警告卡片
                 AlertCard(abnormalStatuses = abnormalStatuses)
             } else {
-                // Show greetings and device status
-                Row(
+                // Show greetings and device status 问候用户并展示设备状态
+                Row( // Greetings 问候用户
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.White.copy(alpha = 0.3f))
@@ -118,7 +124,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 ) {
                     Text("您好，⚫用户001", style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold))
                 }
-                Row(
+                Row( // Device status 设备状态
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.White.copy(alpha = 0.3f))
@@ -137,12 +143,12 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            // Button & Exercise View
+            // Button & Exercise View 按钮&运动记录
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start
             ) {
-                // Pause Button
+                // Pause Button 暂停键
                 IconButton(
                     onClick = { /* 暂停设备？ */ },
                     enabled = false,
@@ -177,13 +183,13 @@ fun HealthScreen(viewModel: HealthViewModel) {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Icon(
+                            Icon( // Running Icon 运动图标
                                 Icons.AutoMirrored.Filled.DirectionsRun,
                                 contentDescription = "运动",
                                 modifier = Modifier.size(40.dp),
                                 tint = Color.White
                             )
-                            Column(
+                            Column( // Exercise texts 运动记录文字内容
                                 horizontalAlignment = Alignment.End
                             ) {
                                 Text("运动记录", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
@@ -204,13 +210,13 @@ fun HealthScreen(viewModel: HealthViewModel) {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Icon(
+                            Icon( // Frostbite Icon 冻伤标志
                                 Icons.Outlined.AcUnit,
                                 contentDescription = "冻伤",
                                 modifier = Modifier.size(40.dp),
                                 tint = Color.White
                             )
-                            Column(
+                            Column( // Frostbite risk texts 冻伤风险文字
                                 horizontalAlignment = Alignment.End
                             ) {
                                 Text("冻伤风险可能性", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
@@ -229,21 +235,23 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 22.sp, fontWeight = FontWeight.Bold)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            // Vital Cards
+            // Vital Cards 健康指标卡片
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                // Temperature Card 体温卡片
                 VitalCardWithSwitch(
                     title = "我的体温",
-                    value = temperature.toString(), // Pass only the numeric value
-                    unit = "℃", // Pass the unit separately
+                    value = temperature.toString(),
+                    unit = "℃",
                     status = temperatureStatus,
                     switchState = isTemperatureSwitchOn,
                     onSwitchChange = viewModel::updateTemperatureSwitch,
                     backgroundPainter = painterResource(R.drawable.centigrade),
                     modifier = Modifier.weight(1f).padding(end = 8.dp)
                 )
+                // Heart Rate Card 心率卡片
                 VitalCardWithSwitch(
                     title = "实时心率",
                     value = heartRate.toString(), // Pass only the numeric value
@@ -260,6 +268,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                // Blood Oxygen Card 血氧卡片
                 VitalCardWithSwitch(
                     title = "血氧浓度",
                     value = spo2.toString(), // Pass only the numeric value
@@ -270,6 +279,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                     backgroundPainter = painterResource(R.drawable.blood_oxygen),
                     modifier = Modifier.weight(1f).padding(end = 8.dp)
                 )
+                // Blood Pressure Card 血压卡片
                 VitalCardWithSwitch(
                     title = "我的血压",
                     value = "${systolicBloodPressure}/${diastolicBloodPressure}", // Pass combined value
@@ -284,6 +294,8 @@ fun HealthScreen(viewModel: HealthViewModel) {
         }
     }
 }
+
+// Alert Card 警告卡片
 @Composable
 fun AlertCard(abnormalStatuses: List<Pair<String, String>>) {
     val isSingleAbnormal = abnormalStatuses.size == 1
@@ -300,7 +312,7 @@ fun AlertCard(abnormalStatuses: List<Pair<String, String>>) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
+            Row( // Display icon and title 展示警告标志和标题
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -316,7 +328,7 @@ fun AlertCard(abnormalStatuses: List<Pair<String, String>>) {
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
+            Text( // Display alert message 展示警告信息
                 text = if (isSingleAbnormal) {
                     val title = abnormalStatuses.first().first
                     val status = abnormalStatuses.first().second
@@ -334,17 +346,20 @@ fun AlertCard(abnormalStatuses: List<Pair<String, String>>) {
         }
     }
 }
+
+// Vital Card 健康指标卡片
 @Composable
 fun VitalCardWithSwitch(
     title: String,
     value: String,
-    unit: String, // Add unit as a parameter
+    unit: String,
     status: String,
     switchState: Boolean,
     onSwitchChange: (Boolean) -> Unit,
     backgroundPainter: Painter?, // Background image
     modifier: Modifier = Modifier
 ) {
+    // Switch UI parameters 开关UI参数
     val switchColors = SwitchDefaults.colors(
         checkedThumbColor = Color.White,
         uncheckedThumbColor = Color.White,
@@ -353,6 +368,7 @@ fun VitalCardWithSwitch(
         checkedBorderColor = Color.Transparent,
         uncheckedBorderColor = Color.Transparent,
     )
+    // Card UI parameters 卡片UI参数
     val cardBackgroundColor = if (status == "正常") Color.Transparent else Color.Red.copy(alpha = 0.8f)
     val statusDisplay = if (status == "正常") "正常" else "异常: $status"
     Card(
@@ -363,8 +379,8 @@ fun VitalCardWithSwitch(
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = cardBackgroundColor)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            // Draw background image
+        Box(modifier = Modifier.fillMaxSize()) { // Box supports overlap，Box支持重叠展示
+            // Draw background image 添加背景图片
             backgroundPainter?.let {
                 Image(
                     painter = it,
@@ -377,13 +393,14 @@ fun VitalCardWithSwitch(
                         .align(Alignment.CenterStart)
                 )
             }
+            // Vital card content 健康指标卡片内容
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 14.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(
+                Row( // Switch and More 展示开关和更多
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
@@ -394,6 +411,8 @@ fun VitalCardWithSwitch(
                         modifier = Modifier.scale(1f),
                         colors = switchColors
                     )
+                    // Switch to an transparent button to support detailed data in the future
+                    // 更改为透明的按钮可以在未来支持详细数据
                     Text(
                         text = "更多",
                         style = MaterialTheme.typography.bodyMedium,
@@ -401,9 +420,11 @@ fun VitalCardWithSwitch(
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
+                // Determine which layout by the title
+                // 根据标题判断需要什么布局
                 when (title) {
                     "我的体温", "实时心率", "血氧浓度" -> {
-                        Column(
+                        Column( // Temperature+status 体温+正常
                             modifier = Modifier.fillMaxWidth().weight(1f),
                             horizontalAlignment = Alignment.End,
                             verticalArrangement = Arrangement.Center
@@ -421,17 +442,17 @@ fun VitalCardWithSwitch(
                                 textAlign = TextAlign.End
                             )
                         }
-                        Box(
+                        Box( // Value 展示值
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.BottomEnd
                         ) {
                             Row(verticalAlignment = Alignment.Bottom) {
-                                Text(
+                                Text( // Number 数值
                                     text = value,
                                     style = TextStyle(fontSize = 36.sp, fontWeight = FontWeight.Bold),
                                     color = if (status == "正常") Color.Black else Color.White
                                 )
-                                Text(
+                                Text( // Unit 单位
                                     text = unit,
                                     style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold),
                                     color = if (status == "正常") Color.Black else Color.White,
@@ -521,6 +542,8 @@ fun VitalCardWithSwitch(
         }
     }
 }
+
+// Preview 动态展示
 @Preview(showBackground = true)
 @Composable
 fun PreviewHealthScreen() {
