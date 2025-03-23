@@ -2,11 +2,25 @@ package com.example.simplehealthmanagement
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsRun
+import androidx.compose.material.icons.filled.Battery4Bar
+import androidx.compose.material.icons.filled.BatteryChargingFull
 import androidx.compose.material.icons.filled.BatteryFull
+import androidx.compose.material.icons.filled.BatteryStd
+import androidx.compose.material.icons.filled.DataThresholding
+import androidx.compose.material.icons.filled.DirectionsRun
+import androidx.compose.material.icons.filled.Flare
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PauseCircle
+import androidx.compose.material.icons.filled.Person2
+import androidx.compose.material.icons.filled.PersonalVideo
+import androidx.compose.material.icons.outlined.AcUnit
 import androidx.compose.material3.*
+import androidx.compose.material3.NavigationBarDefaults.containerColor
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,11 +28,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
 // UI Entrance
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun HealthScreen(viewModel: HealthViewModel) {
     val temperature by viewModel.temperature.collectAsState()
@@ -35,23 +51,23 @@ fun HealthScreen(viewModel: HealthViewModel) {
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
+            NavigationBar(containerColor = Color.Transparent) {
                 NavigationBarItem(
                     selected = true,
                     onClick = { /*TODO*/ },
-                    icon = { Icon(Icons.Filled.BatteryFull, contentDescription = "首页") },
+                    icon = { Icon(Icons.Filled.Home, contentDescription = "首页") },
                     label = { Text("首页") }
                 )
                 NavigationBarItem(
                     selected = false,
                     onClick = { /*TODO*/ },
-                    icon = { Icon(Icons.Filled.BatteryFull, contentDescription = "数据") },
+                    icon = { Icon(Icons.Filled.DataThresholding, contentDescription = "数据") },
                     label = { Text("数据") }
                 )
                 NavigationBarItem(
                     selected = false,
                     onClick = { /*TODO*/ },
-                    icon = { Icon(Icons.Filled.BatteryFull, contentDescription = "个人") },
+                    icon = { Icon(Icons.Filled.Person2, contentDescription = "个人") },
                     label = { Text("个人") }
                 )
             }
@@ -64,82 +80,143 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // 元素1
+            // Greetings
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.LightGray.copy(alpha = 0.3f))
+                    .background(Color.White.copy(alpha = 0.3f))
                     .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("你好，用户001")
-                Text("设备已连接")
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("设备电量")
-                    Icon(Icons.Filled.BatteryFull, contentDescription = "电池电量")
+                Text("您好，⚫用户001", style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold))
+            }
+
+            // Device status
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White.copy(alpha = 0.3f))
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Text("设备已连接", style = TextStyle(fontSize = 15.sp))
+                Spacer(modifier = Modifier.width(16.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text("设备电量", style = TextStyle(fontSize = 15.sp))
+                    Icon(Icons.Filled.Battery4Bar, contentDescription = "电池电量")
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // 元素2
+            // Button & Exercise View
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.Start
             ) {
-                // 组件1
-                Button(
-                    onClick = { /* 不可点击 */ },
+                // Pause Button
+                IconButton(
+                    onClick = { /* 暂停设备？ */ },
                     enabled = false,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 4.dp)
+                        .size(130.dp)
+                        .padding(end = 1.dp)
+                    // colors =
+
                 ) {
-                    Icon(Icons.Filled.Pause, contentDescription = "暂停")
+                    Icon(
+                        Icons.Filled.PauseCircle,
+                        contentDescription = "暂停",
+                        modifier = Modifier.size(130.dp),
+                        tint = Color(0xFF64A7E8),
+                    )
                 }
 
-                // 组件2
+                // Exercise and Frostbite 运动记录和冻伤风险
                 Column(
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 4.dp),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
+                    // Exercise records 运动记录
                     Box(
                         modifier = Modifier
-                            .background(Color.Cyan.copy(alpha = 0.6f), shape = RoundedCornerShape(4.dp))
+                            .background(Color(0xFF64A7E8), shape = RoundedCornerShape(10.dp))
                             .fillMaxWidth()
-                            .padding(8.dp),
-                        contentAlignment = Alignment.Center
+                            .padding(12.dp),
                     ) {
-                        Text("运动记录：今日已走${stepCount}步", color = Color.White)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.DirectionsRun,
+                                contentDescription = "运动",
+                                modifier = Modifier.size(40.dp),
+                                tint = Color.White
+                            )
+                            Column(
+                                horizontalAlignment = Alignment.End
+                            ) {
+                                Text("运动记录", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                                Text("今日已走${stepCount}步", color = Color.White)
+                            }
+                        }
                     }
+
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+
+                    // Frostbite risk 冻伤风险
                     Box(
                         modifier = Modifier
-                            .background(Color.Cyan.copy(alpha = 0.6f), shape = RoundedCornerShape(4.dp))
+                            .background(Color(0xFF64A7E8), shape = RoundedCornerShape(10.dp))
                             .fillMaxWidth()
-                            .padding(8.dp),
-                        contentAlignment = Alignment.Center
+                            .padding(12.dp),
                     ) {
-                        Text("冻伤风险可能性${frostbiteRisk}%", color = Color.White)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Icon(
+                                Icons.Outlined.AcUnit,
+                                contentDescription = "冻伤",
+                                modifier = Modifier.size(40.dp),
+                                tint = Color.White
+                            )
+                            Column(
+                                horizontalAlignment = Alignment.End
+                            ) {
+                                Text("冻伤风险可能性", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                                Text("${frostbiteRisk}%", color = Color.White)
+                            }
+                        }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // 元素3
+            // 各项指标 Text
             Text(
                 text = "各项指标",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 22.sp, fontWeight = FontWeight.Bold)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // 元素4
+            // Vital Cards
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -200,7 +277,8 @@ fun VitalCardWithSwitch(
 ) {
     Card(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(210.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(
@@ -212,10 +290,11 @@ fun VitalCardWithSwitch(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = title, style = MaterialTheme.typography.bodyMedium)
                 Switch(checked = switchState, onCheckedChange = onSwitchChange)
+                Text(text = "更多", style = MaterialTheme.typography.bodyMedium)
             }
             Spacer(modifier = Modifier.height(8.dp))
+            Text(text = title, style = MaterialTheme.typography.bodyMedium)
             Text(text = value, style = MaterialTheme.typography.headlineSmall)
             Text(text = "状态: $status", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
         }
