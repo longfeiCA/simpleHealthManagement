@@ -170,7 +170,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                         modifier = Modifier
                             .background(Color(0xFF64A7E8), shape = RoundedCornerShape(10.dp))
                             .fillMaxWidth()
-                            .padding(12.dp),
+                            .padding(top = 8.dp, bottom = 8.dp, start = 8.dp, end = 12.dp),
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -197,7 +197,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                         modifier = Modifier
                             .background(Color(0xFF64A7E8), shape = RoundedCornerShape(10.dp))
                             .fillMaxWidth()
-                            .padding(12.dp),
+                            .padding(top = 8.dp, bottom = 8.dp, start = 8.dp, end = 12.dp),
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -220,7 +220,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(0.dp))
             // 各项指标 Text
             Text(
                 text = "各项指标",
@@ -358,7 +358,7 @@ fun VitalCardWithSwitch(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(210.dp)
+            .height(220.dp)
             .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp)),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = cardBackgroundColor)
@@ -380,7 +380,7 @@ fun VitalCardWithSwitch(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 14.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
@@ -402,7 +402,7 @@ fun VitalCardWithSwitch(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 when (title) {
-                    "我的体温", "实时心率", "血氧浓度", "我的血压" -> {
+                    "我的体温", "实时心率", "血氧浓度" -> {
                         Column(
                             modifier = Modifier.fillMaxWidth().weight(1f),
                             horizontalAlignment = Alignment.End,
@@ -440,22 +440,43 @@ fun VitalCardWithSwitch(
                             }
                         }
                     }
-                    else -> {
-                        Text(
-                            text = title,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = if (status == "正常") Color.Black else Color.White
-                        )
-                        Text(
-                            text = "$value $unit",
-                            style = MaterialTheme.typography.headlineSmall,
-                            color = if (status == "正常") Color.Black else Color.White
-                        )
-                        Text(
-                            text = "$statusDisplay",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = if (status == "正常") Color.Gray else Color.White
-                        )
+                    else -> { // 我的血压
+                        Column(
+                            modifier = Modifier.fillMaxWidth().weight(1f),
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.Top
+                        ) {
+                            Text(
+                                text = title,
+                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+                                color = if (status == "正常") Color.Black else Color.White,
+                                textAlign = TextAlign.End
+                            )
+                            Text(
+                                text = statusDisplay,
+                                style = TextStyle(fontSize = 12.sp),
+                                color = if (status == "正常") Color.Gray else Color.White,
+                                textAlign = TextAlign.End
+                            )
+                        }
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.BottomEnd
+                        ) {
+                            Row(verticalAlignment = Alignment.Bottom) {
+                                Text(
+                                    text = value,
+                                    style = TextStyle(fontSize = 36.sp, fontWeight = FontWeight.Bold),
+                                    color = if (status == "正常") Color.Black else Color.White
+                                )
+                                Text(
+                                    text = unit,
+                                    style = TextStyle(fontSize = 14.sp),
+                                    color = if (status == "正常") Color.Black else Color.White,
+                                    modifier = Modifier.padding(bottom = 2.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }
