@@ -59,12 +59,12 @@ class HealthViewModel : ViewModel() {
         viewModelScope.launch {
             while (true) {
                 _temperature.value = String.format("%.1f", Random.nextDouble(35.5, 38.5)).toDouble()
-                _heartRate.value = Random.nextInt(50, 120)
+                _heartRate.value = Random.nextInt(50, 115)
                 _systolicBloodPressure.value = Random.nextInt(90, 140)
                 _diastolicBloodPressure.value = Random.nextInt(60, 90)
-                _spo2.value = Random.nextInt(90, 100)
+                _spo2.value = Random.nextInt(93, 100)
                 _stepCount.value = Random.nextInt(1000, 5000)
-                _frostbiteRisk.value = Random.nextInt(0, 5) * 20 // 模拟0%, 20%, 40%, 60%, 80%
+                _frostbiteRisk.value = Random.nextInt(0, 5) * 20
 
                 delay(5000) // 每5秒更新一次
             }
@@ -73,14 +73,18 @@ class HealthViewModel : ViewModel() {
 
     fun getTemperatureStatus(temperature: Double): String {
         return when {
-            temperature > 37.5 -> "高温"
-            temperature < 36.0 -> "低温"
+            temperature > 37.5 -> "偏高"
+            temperature < 36.0 -> "偏低"
             else -> "正常"
         }
     }
 
     fun getHeartRateStatus(heartRate: Int): String {
-        return if (heartRate in 60..100) "正常" else "异常"
+        return when {
+            heartRate > 100 -> "偏高"
+            heartRate < 60 -> "偏低"
+            else -> "正常"
+        }
     }
 
     fun getBloodOxygenStatus(spo2: Int): String {

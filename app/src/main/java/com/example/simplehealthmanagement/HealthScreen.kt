@@ -70,6 +70,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
         unselectedTextColor = Color.Black.copy(alpha = 0.3f)
     )
 
+
     Scaffold(
         bottomBar = {
             NavigationBar(containerColor = Color(0xFF64A7E8)) {
@@ -303,7 +304,6 @@ fun HealthScreen(viewModel: HealthViewModel) {
 @Composable
 fun AlertCard(abnormalStatuses: List<Pair<String, String>>) {
     val isSingleAbnormal = abnormalStatuses.size == 1
-    val abnormalTitle = abnormalStatuses.firstOrNull()?.first ?: ""
 
     Card(
         modifier = Modifier
@@ -328,14 +328,24 @@ fun AlertCard(abnormalStatuses: List<Pair<String, String>>) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = if (isSingleAbnormal) "${abnormalTitle}异常警告" else "多项异常警告",
+                    text = if (isSingleAbnormal) "${abnormalStatuses.first().first}异常警告" else "多项异常警告",
                     color = Color.White,
                     style = MaterialTheme.typography.headlineSmall
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = if (isSingleAbnormal) "目前您的${abnormalTitle}已超出您设置的正常区间" else "目前多个指标已超出您设置的正常区间",
+                text = if (isSingleAbnormal) {
+                    val title = abnormalStatuses.first().first
+                    val status = abnormalStatuses.first().second
+                    when (status) {
+                        "偏高" -> "目前您的${title}已达到您设置的上限"
+                        "偏低" -> "目前您的${title}已低于您设置的下限"
+                        else -> "目前您的${title}异常" // Fallback
+                    }
+                } else {
+                    "目前多个指标已达到您设置的上限"
+                },
                 color = Color.White,
                 style = MaterialTheme.typography.bodySmall
             )
@@ -363,6 +373,7 @@ fun VitalCardWithSwitch(
     )
 
     val cardBackgroundColor = if (status == "正常") Color.Transparent else Color.Red.copy(alpha = 0.7f)
+    val statusDisplay = if (status == "正常") "正常" else "异常: $status"
 
     Card(
         modifier = modifier
@@ -421,7 +432,7 @@ fun VitalCardWithSwitch(
                     color = if (status == "正常") Color.Black else Color.White
                 )
                 Text(
-                    text = "状态: $status",
+                    text = "$statusDisplay",
                     style = MaterialTheme.typography.bodySmall,
                     color = if (status == "正常") Color.Gray else Color.White
                 )
