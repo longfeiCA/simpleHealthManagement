@@ -3,6 +3,7 @@ package com.example.simplehealthmanagement
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.DragInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -148,8 +149,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                     modifier = Modifier
                         .weight(1f)
                         .size(130.dp)
-                        .padding(end = 1.dp)
-                    // colors =
+                        .padding(end = 0.dp)
                 ) {
                     Icon(
                         Icons.Filled.PauseCircle,
@@ -416,7 +416,7 @@ fun VitalCardWithSwitch(
                             )
                             Text(
                                 text = statusDisplay,
-                                style = TextStyle(fontSize = 12.sp),
+                                style = TextStyle(fontSize = 14.sp),
                                 color = if (status == "正常") Color.Gray else Color.White,
                                 textAlign = TextAlign.End
                             )
@@ -433,7 +433,7 @@ fun VitalCardWithSwitch(
                                 )
                                 Text(
                                     text = unit,
-                                    style = TextStyle(fontSize = 14.sp),
+                                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold),
                                     color = if (status == "正常") Color.Black else Color.White,
                                     modifier = Modifier.padding(bottom = 2.dp)
                                 )
@@ -441,41 +441,76 @@ fun VitalCardWithSwitch(
                         }
                     }
                     else -> { // 我的血压
-                        Column(
-                            modifier = Modifier.fillMaxWidth().weight(1f),
+                        Column( // 我的血压 正常
+                            modifier = Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.End,
                             verticalArrangement = Arrangement.Top
                         ) {
-                            Text(
+                            Text( // 我的血压
                                 text = title,
                                 style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
                                 color = if (status == "正常") Color.Black else Color.White,
                                 textAlign = TextAlign.End
                             )
-                            Text(
+                            Text( // 正常
                                 text = statusDisplay,
-                                style = TextStyle(fontSize = 12.sp),
+                                style = TextStyle(fontSize = 14.sp),
                                 color = if (status == "正常") Color.Gray else Color.White,
                                 textAlign = TextAlign.End
                             )
                         }
-                        Box(
+
+                        Column( //高低压展示
                             modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.BottomEnd
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.Center
                         ) {
+                            val (high, low) = value.split("/")
+                            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.Start){
+                                Text(// 高压值文字
+                                    text = "高压值",
+                                    style = TextStyle(fontSize = 10.sp),
+                                    color = if (status == "正常") Color.Black else Color.White,
+                                )
+                            }
+                            // 高压值展示
                             Row(verticalAlignment = Alignment.Bottom) {
                                 Text(
-                                    text = value,
+                                    text = high,
                                     style = TextStyle(fontSize = 36.sp, fontWeight = FontWeight.Bold),
                                     color = if (status == "正常") Color.Black else Color.White
                                 )
                                 Text(
                                     text = unit,
-                                    style = TextStyle(fontSize = 14.sp),
+                                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold),
                                     color = if (status == "正常") Color.Black else Color.White,
                                     modifier = Modifier.padding(bottom = 2.dp)
                                 )
                             }
+                            // 低压值文字
+                            Row(verticalAlignment = Alignment.Bottom) {
+                                Text(// 低压值
+                                    text = "低压值",
+                                    style = TextStyle(fontSize = 10.sp),
+                                    color = if (status == "正常") Color.Black else Color.White,
+                                )
+                            }
+                            // 低压值展示
+                            Row(verticalAlignment = Alignment.Bottom) {
+
+                                Text(
+                                    text = low,
+                                    style = TextStyle(fontSize = 36.sp, fontWeight = FontWeight.Bold),
+                                    color = if (status == "正常") Color.Black else Color.White
+                                )
+                                Text(
+                                    text = unit,
+                                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold),
+                                    color = if (status == "正常") Color.Black else Color.White,
+                                    modifier = Modifier.padding(bottom = 2.dp)
+                                )
+                            }
+
                         }
                     }
                 }
