@@ -461,56 +461,59 @@ fun VitalCardWithSwitch(
                         }
 
                         Column( //高低压展示
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.End,
+                            modifier = Modifier.fillMaxWidth().weight(1f),
                             verticalArrangement = Arrangement.Center
                         ) {
                             val (high, low) = value.split("/")
-                            Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.Start){
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
                                 Text(// 高压值文字
                                     text = "高压值",
                                     style = TextStyle(fontSize = 10.sp),
                                     color = if (status == "正常") Color.Black else Color.White,
                                 )
+                                Row(verticalAlignment = Alignment.Bottom) {
+                                    Text(
+                                        text = high,
+                                        style = TextStyle(fontSize = 36.sp, fontWeight = FontWeight.Bold),
+                                        color = if (status == "正常") Color.Black else Color.White
+                                    )
+                                    Text(
+                                        text = unit,
+                                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold),
+                                        color = if (status == "正常") Color.Black else Color.White,
+                                        modifier = Modifier.padding(bottom = 2.dp)
+                                    )
+                                }
                             }
-                            // 高压值展示
-                            Row(verticalAlignment = Alignment.Bottom) {
-                                Text(
-                                    text = high,
-                                    style = TextStyle(fontSize = 36.sp, fontWeight = FontWeight.Bold),
-                                    color = if (status == "正常") Color.Black else Color.White
-                                )
-                                Text(
-                                    text = unit,
-                                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold),
-                                    color = if (status == "正常") Color.Black else Color.White,
-                                    modifier = Modifier.padding(bottom = 2.dp)
-                                )
-                            }
-                            // 低压值文字
-                            Row(verticalAlignment = Alignment.Bottom) {
-                                Text(// 低压值
+                            Spacer(modifier = Modifier.height(4.dp)) // 增加一些垂直间距
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(// 低压值文字
                                     text = "低压值",
                                     style = TextStyle(fontSize = 10.sp),
                                     color = if (status == "正常") Color.Black else Color.White,
                                 )
+                                Row(verticalAlignment = Alignment.Bottom) {
+                                    Text(
+                                        text = low,
+                                        style = TextStyle(fontSize = 36.sp, fontWeight = FontWeight.Bold),
+                                        color = if (status == "正常") Color.Black else Color.White
+                                    )
+                                    Text(
+                                        text = unit,
+                                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold),
+                                        color = if (status == "正常") Color.Black else Color.White,
+                                        modifier = Modifier.padding(bottom = 2.dp)
+                                    )
+                                }
                             }
-                            // 低压值展示
-                            Row(verticalAlignment = Alignment.Bottom) {
-
-                                Text(
-                                    text = low,
-                                    style = TextStyle(fontSize = 36.sp, fontWeight = FontWeight.Bold),
-                                    color = if (status == "正常") Color.Black else Color.White
-                                )
-                                Text(
-                                    text = unit,
-                                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold),
-                                    color = if (status == "正常") Color.Black else Color.White,
-                                    modifier = Modifier.padding(bottom = 2.dp)
-                                )
-                            }
-
                         }
                     }
                 }
