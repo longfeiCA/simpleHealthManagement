@@ -1,5 +1,6 @@
 package com.example.simplehealthmanagement
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,8 +20,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -234,6 +238,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                     status = viewModel.getTemperatureStatus(temperature),
                     switchState = isTemperatureSwitchOn,
                     onSwitchChange = viewModel::updateTemperatureSwitch,
+                    backgroundPainter = painterResource(R.drawable.centigrade),
                     modifier = Modifier.weight(1f).padding(end = 8.dp)
                 )
                 VitalCardWithSwitch(
@@ -242,6 +247,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                     status = viewModel.getHeartRateStatus(heartRate),
                     switchState = isHeartRateSwitchOn,
                     onSwitchChange = viewModel::updateHeartRateSwitch,
+                    backgroundPainter = painterResource(R.drawable.heart),
                     modifier = Modifier.weight(1f).padding(start = 8.dp)
                 )
             }
@@ -258,6 +264,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                     status = viewModel.getBloodOxygenStatus(spo2),
                     switchState = isBloodOxygenSwitchOn,
                     onSwitchChange = viewModel::updateBloodOxygenSwitch,
+                    backgroundPainter = painterResource(R.drawable.blood_oxygen),
                     modifier = Modifier.weight(1f).padding(end = 8.dp)
                 )
                 VitalCardWithSwitch(
@@ -266,6 +273,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                     status = viewModel.getBloodPressureStatus(systolicBloodPressure, diastolicBloodPressure),
                     switchState = isBloodPressureSwitchOn,
                     onSwitchChange = viewModel::updateBloodPressureSwitch,
+                    backgroundPainter = painterResource(R.drawable.blood_pressure),
                     modifier = Modifier.weight(1f).padding(start = 8.dp)
                 )
             }
@@ -280,49 +288,68 @@ fun VitalCardWithSwitch(
     status: String,
     switchState: Boolean,
     onSwitchChange: (Boolean) -> Unit,
+    backgroundPainter: Painter?, // 添加背景图片选项
     modifier: Modifier = Modifier
 ) {
     val switchColors = SwitchDefaults.colors(
-        checkedThumbColor = Color.White, // 选中时滑块颜色
-        uncheckedThumbColor = Color.White, // 未选中时滑块颜色
-        checkedTrackColor = Color(0xFF64A7E8), // 选中时轨道颜色
-        uncheckedTrackColor = Color.Gray, // 未选中时轨道颜色
-        checkedBorderColor = Color.Transparent, // 选中时边框颜色
-        uncheckedBorderColor = Color.Transparent, // 未选中时边框颜色
+        checkedThumbColor = Color.White,
+        uncheckedThumbColor = Color.White,
+        checkedTrackColor = Color(0xFF64A7E8),
+        uncheckedTrackColor = Color(0xFF64A7E8),
+        checkedBorderColor = Color.Transparent,
+        uncheckedBorderColor = Color.Transparent,
     )
 
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(210.dp)
-            .background(Color.Red),
-        shape = RoundedCornerShape(12.dp)
+            .height(210.dp),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent) // 透明背景
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Switch(
-                    checked = switchState,
-                    onCheckedChange = onSwitchChange,
-                    modifier= Modifier.scale(1f),
-                    colors = switchColors
+        Box(modifier = Modifier.fillMaxSize()) {
+            // Draw background image
+            backgroundPainter?.let {
+                Image(
+                    painter = it,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(0.9f)
+                        .alpha(0.2f)
+                        .align(Alignment.CenterStart)
                 )
-
-                Text(text = "更多", style = MaterialTheme.typography.bodyMedium)
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = title, style = MaterialTheme.typography.bodyMedium)
-            Text(text = value, style = MaterialTheme.typography.headlineSmall)
-            Text(text = "状态: $status", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Switch(
+                        checked = switchState,
+                        onCheckedChange = onSwitchChange,
+                        modifier = Modifier.scale(1f),
+                        colors = switchColors
+                    )
+                    Text(text = "更多", style = MaterialTheme.typography.bodyMedium)
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = title, style = MaterialTheme.typography.bodyMedium)
+                Text(text = value, style = MaterialTheme.typography.headlineSmall)
+                Text(text = "状态: $status", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+            }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
