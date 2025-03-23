@@ -2,25 +2,16 @@ package com.example.simplehealthmanagement
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.filled.Battery4Bar
-import androidx.compose.material.icons.filled.BatteryChargingFull
-import androidx.compose.material.icons.filled.BatteryFull
-import androidx.compose.material.icons.filled.BatteryStd
 import androidx.compose.material.icons.filled.DataThresholding
-import androidx.compose.material.icons.filled.DirectionsRun
-import androidx.compose.material.icons.filled.Flare
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PauseCircle
 import androidx.compose.material.icons.filled.Person2
-import androidx.compose.material.icons.filled.PersonalVideo
 import androidx.compose.material.icons.outlined.AcUnit
 import androidx.compose.material3.*
-import androidx.compose.material3.NavigationBarDefaults.containerColor
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,26 +40,39 @@ fun HealthScreen(viewModel: HealthViewModel) {
     val isBloodOxygenSwitchOn by viewModel.isBloodOxygenSwitchOn.collectAsState()
     val isBloodPressureSwitchOn by viewModel.isBloodPressureSwitchOn.collectAsState()
 
+
+    // UI parameters
+    val navigationItemColors = NavigationBarItemDefaults.colors(
+        selectedIconColor = Color.Black,
+        selectedTextColor = Color.Black,
+        unselectedIconColor = Color.White.copy(alpha = 0.3f),
+        unselectedTextColor = Color.Black.copy(alpha = 0.3f)
+    )
+
     Scaffold(
         bottomBar = {
-            NavigationBar(containerColor = Color.Transparent) {
+            NavigationBar(containerColor = Color(0xFF64A7E8)) {
                 NavigationBarItem(
                     selected = true,
                     onClick = { /*TODO*/ },
                     icon = { Icon(Icons.Filled.Home, contentDescription = "首页") },
-                    label = { Text("首页") }
+                    label = { Text("首页") },
+                    colors = navigationItemColors
                 )
                 NavigationBarItem(
                     selected = false,
                     onClick = { /*TODO*/ },
                     icon = { Icon(Icons.Filled.DataThresholding, contentDescription = "数据") },
-                    label = { Text("数据") }
+                    label = { Text("数据") },
+                    colors = navigationItemColors
+
                 )
                 NavigationBarItem(
                     selected = false,
                     onClick = { /*TODO*/ },
                     icon = { Icon(Icons.Filled.Person2, contentDescription = "个人") },
-                    label = { Text("个人") }
+                    label = { Text("个人") },
+                    colors = navigationItemColors
                 )
             }
         }
