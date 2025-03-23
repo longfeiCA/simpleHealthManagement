@@ -2,6 +2,7 @@ package com.example.simplehealthmanagement
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -360,7 +361,7 @@ fun VitalCardWithSwitch(
     status: String,
     switchState: Boolean,
     onSwitchChange: (Boolean) -> Unit,
-    backgroundPainter: Painter?, // 添加背景图片选项
+    backgroundPainter: Painter?, // Background image
     modifier: Modifier = Modifier
 ) {
     val switchColors = SwitchDefaults.colors(
@@ -372,13 +373,14 @@ fun VitalCardWithSwitch(
         uncheckedBorderColor = Color.Transparent,
     )
 
-    val cardBackgroundColor = if (status == "正常") Color.Transparent else Color.Red.copy(alpha = 0.7f)
+    val cardBackgroundColor = if (status == "正常") Color.Transparent else Color.Red.copy(alpha = 0.8f)
     val statusDisplay = if (status == "正常") "正常" else "异常: $status"
 
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(210.dp),
+            .height(210.dp)
+            .border(1.dp, Color.LightGray, RoundedCornerShape(12.dp)),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = cardBackgroundColor)
     ) {
