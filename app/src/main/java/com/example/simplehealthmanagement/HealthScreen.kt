@@ -33,9 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-
 // UI Entrance
-
 @Composable
 fun HealthScreen(viewModel: HealthViewModel) {
     val temperature by viewModel.temperature.collectAsState()
@@ -49,22 +47,18 @@ fun HealthScreen(viewModel: HealthViewModel) {
     val isHeartRateSwitchOn by viewModel.isHeartRateSwitchOn.collectAsState()
     val isBloodOxygenSwitchOn by viewModel.isBloodOxygenSwitchOn.collectAsState()
     val isBloodPressureSwitchOn by viewModel.isBloodPressureSwitchOn.collectAsState()
-
     val temperatureStatus = viewModel.getTemperatureStatus(temperature)
     val heartRateStatus = viewModel.getHeartRateStatus(heartRate)
     val bloodOxygenStatus = viewModel.getBloodOxygenStatus(spo2)
     val bloodPressureStatus = viewModel.getBloodPressureStatus(systolicBloodPressure, diastolicBloodPressure)
-
     val vitalStatuses = listOf(
         "体温" to temperatureStatus,
         "心率" to heartRateStatus,
         "血氧浓度" to bloodOxygenStatus,
         "血压" to bloodPressureStatus
     )
-
     val abnormalStatuses = vitalStatuses.filter { it.second != "正常" }
     val hasAbnormalStatus = abnormalStatuses.isNotEmpty()
-
     // UI parameters
     val navigationItemColors = NavigationBarItemDefaults.colors(
         selectedIconColor = Color.Black,
@@ -72,9 +66,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
         unselectedIconColor = Color.White.copy(alpha = 0.3f),
         unselectedTextColor = Color.Black.copy(alpha = 0.3f)
     )
-
     val scrollState = rememberScrollState()
-
     Scaffold(
         bottomBar = {
             NavigationBar(containerColor = Color(0xFF64A7E8)) {
@@ -91,7 +83,6 @@ fun HealthScreen(viewModel: HealthViewModel) {
                     icon = { Icon(Icons.Filled.DataThresholding, contentDescription = "数据") },
                     label = { Text("数据") },
                     colors = navigationItemColors
-
                 )
                 NavigationBarItem(
                     selected = false,
@@ -126,7 +117,6 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 ) {
                     Text("您好，⚫用户001", style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold))
                 }
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -144,11 +134,8 @@ fun HealthScreen(viewModel: HealthViewModel) {
                         Icon(Icons.Filled.Battery4Bar, contentDescription = "电池电量")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(8.dp))
             }
-
-
             // Button & Exercise View
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -163,7 +150,6 @@ fun HealthScreen(viewModel: HealthViewModel) {
                         .size(130.dp)
                         .padding(end = 1.dp)
                     // colors =
-
                 ) {
                     Icon(
                         Icons.Filled.PauseCircle,
@@ -172,7 +158,6 @@ fun HealthScreen(viewModel: HealthViewModel) {
                         tint = Color(0xFF64A7E8),
                     )
                 }
-
                 // Exercise and Frostbite 运动记录和冻伤风险
                 Column(
                     modifier = Modifier
@@ -206,11 +191,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                             }
                         }
                     }
-
-
                     Spacer(modifier = Modifier.height(10.dp))
-
-
                     // Frostbite risk 冻伤风险
                     Box(
                         modifier = Modifier
@@ -239,9 +220,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                     }
                 }
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             // 各项指标 Text
             Text(
                 text = "各项指标",
@@ -249,9 +228,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 textAlign = TextAlign.Start,
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 22.sp, fontWeight = FontWeight.Bold)
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             // Vital Cards
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -259,7 +236,8 @@ fun HealthScreen(viewModel: HealthViewModel) {
             ) {
                 VitalCardWithSwitch(
                     title = "我的体温",
-                    value = "$temperature ℃",
+                    value = temperature.toString(), // Pass only the numeric value
+                    unit = "℃", // Pass the unit separately
                     status = temperatureStatus,
                     switchState = isTemperatureSwitchOn,
                     onSwitchChange = viewModel::updateTemperatureSwitch,
@@ -268,7 +246,8 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 )
                 VitalCardWithSwitch(
                     title = "实时心率",
-                    value = "$heartRate bpm",
+                    value = heartRate.toString(), // Pass only the numeric value
+                    unit = "bpm", // Pass the unit separately
                     status = heartRateStatus,
                     switchState = isHeartRateSwitchOn,
                     onSwitchChange = viewModel::updateHeartRateSwitch,
@@ -276,16 +255,15 @@ fun HealthScreen(viewModel: HealthViewModel) {
                     modifier = Modifier.weight(1f).padding(start = 8.dp)
                 )
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 VitalCardWithSwitch(
                     title = "血氧浓度",
-                    value = "$spo2 %",
+                    value = spo2.toString(), // Pass only the numeric value
+                    unit = "SPO₂", // Pass the unit separately
                     status = bloodOxygenStatus,
                     switchState = isBloodOxygenSwitchOn,
                     onSwitchChange = viewModel::updateBloodOxygenSwitch,
@@ -294,7 +272,8 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 )
                 VitalCardWithSwitch(
                     title = "我的血压",
-                    value = "${systolicBloodPressure}/${diastolicBloodPressure} mmHg",
+                    value = "${systolicBloodPressure}/${diastolicBloodPressure}", // Pass combined value
+                    unit = "mmHg", // Pass the unit separately
                     status = bloodPressureStatus,
                     switchState = isBloodPressureSwitchOn,
                     onSwitchChange = viewModel::updateBloodPressureSwitch,
@@ -305,11 +284,9 @@ fun HealthScreen(viewModel: HealthViewModel) {
         }
     }
 }
-
 @Composable
 fun AlertCard(abnormalStatuses: List<Pair<String, String>>) {
     val isSingleAbnormal = abnormalStatuses.size == 1
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -357,11 +334,11 @@ fun AlertCard(abnormalStatuses: List<Pair<String, String>>) {
         }
     }
 }
-
 @Composable
 fun VitalCardWithSwitch(
     title: String,
     value: String,
+    unit: String, // Add unit as a parameter
     status: String,
     switchState: Boolean,
     onSwitchChange: (Boolean) -> Unit,
@@ -376,10 +353,8 @@ fun VitalCardWithSwitch(
         checkedBorderColor = Color.Transparent,
         uncheckedBorderColor = Color.Transparent,
     )
-
     val cardBackgroundColor = if (status == "正常") Color.Transparent else Color.Red.copy(alpha = 0.8f)
     val statusDisplay = if (status == "正常") "正常" else "异常: $status"
-
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -402,7 +377,6 @@ fun VitalCardWithSwitch(
                         .align(Alignment.CenterStart)
                 )
             }
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -427,27 +401,67 @@ fun VitalCardWithSwitch(
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = if (status == "正常") Color.Black else Color.White
-                )
-                Text(
-                    text = value,
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = if (status == "正常") Color.Black else Color.White
-                )
-                Text(
-                    text = "$statusDisplay",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (status == "正常") Color.Gray else Color.White
-                )
+                when (title) {
+                    "我的体温", "实时心率", "血氧浓度", "我的血压" -> {
+                        Column(
+                            modifier = Modifier.fillMaxWidth().weight(1f),
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = title,
+                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+                                color = if (status == "正常") Color.Black else Color.White,
+                                textAlign = TextAlign.End
+                            )
+                            Text(
+                                text = statusDisplay,
+                                style = TextStyle(fontSize = 12.sp),
+                                color = if (status == "正常") Color.Gray else Color.White,
+                                textAlign = TextAlign.End
+                            )
+                        }
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.BottomEnd
+                        ) {
+                            Row(verticalAlignment = Alignment.Bottom) {
+                                Text(
+                                    text = value,
+                                    style = TextStyle(fontSize = 36.sp, fontWeight = FontWeight.Bold),
+                                    color = if (status == "正常") Color.Black else Color.White
+                                )
+                                Text(
+                                    text = unit,
+                                    style = TextStyle(fontSize = 14.sp),
+                                    color = if (status == "正常") Color.Black else Color.White,
+                                    modifier = Modifier.padding(bottom = 2.dp)
+                                )
+                            }
+                        }
+                    }
+                    else -> {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (status == "正常") Color.Black else Color.White
+                        )
+                        Text(
+                            text = "$value $unit",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = if (status == "正常") Color.Black else Color.White
+                        )
+                        Text(
+                            text = "$statusDisplay",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (status == "正常") Color.Gray else Color.White
+                        )
+                    }
+                }
             }
         }
     }
 }
-
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewHealthScreen() {
