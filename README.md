@@ -77,7 +77,7 @@ Gradle 插件:
 ## 程序运行截图
 
 <p align="center">
-  <img src="screenshots/normal.png" alt="Normal" style="max-width: 30%;">
-  <img src="screenshots/alert.png" alt="Alert" style="max-width: 30%;">
-  <img src="screenshots/multiple_alerts.png" alt="Multiple Alerts" style="max-width: 30%;">
+  <img src="screenshots/normal.png" alt="Normal" width="200">
+  <img src="screenshots/alert.png" alt="Alert" width="200">
+  <img src="screenshots/multiple_alerts.png" alt="Multiple Alerts" width="200">
 </p>
