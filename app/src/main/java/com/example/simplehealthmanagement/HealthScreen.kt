@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.DataThresholding
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PauseCircle
 import androidx.compose.material.icons.filled.Person2
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.outlined.AcUnit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -46,6 +47,20 @@ fun HealthScreen(viewModel: HealthViewModel) {
     val isBloodOxygenSwitchOn by viewModel.isBloodOxygenSwitchOn.collectAsState()
     val isBloodPressureSwitchOn by viewModel.isBloodPressureSwitchOn.collectAsState()
 
+    val temperatureStatus = viewModel.getTemperatureStatus(temperature)
+    val heartRateStatus = viewModel.getHeartRateStatus(heartRate)
+    val bloodOxygenStatus = viewModel.getBloodOxygenStatus(spo2)
+    val bloodPressureStatus = viewModel.getBloodPressureStatus(systolicBloodPressure, diastolicBloodPressure)
+
+    val vitalStatuses = listOf(
+        "我的体温" to temperatureStatus,
+        "实时心率" to heartRateStatus,
+        "血样浓度" to bloodOxygenStatus,
+        "我的血压" to bloodPressureStatus
+    )
+
+    val abnormalStatuses = vitalStatuses.filter { it.second != "正常" }
+    val hasAbnormalStatus = abnormalStatuses.isNotEmpty()
 
     // UI parameters
     val navigationItemColors = NavigationBarItemDefaults.colors(
@@ -54,7 +69,6 @@ fun HealthScreen(viewModel: HealthViewModel) {
         unselectedIconColor = Color.White.copy(alpha = 0.3f),
         unselectedTextColor = Color.Black.copy(alpha = 0.3f)
     )
-
 
     Scaffold(
         bottomBar = {
@@ -91,38 +105,43 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Greetings
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White.copy(alpha = 0.3f))
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("您好，⚫用户001", style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold))
-            }
-
-            // Device status
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White.copy(alpha = 0.3f))
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Text("设备已连接", style = TextStyle(fontSize = 15.sp))
-                Spacer(modifier = Modifier.width(16.dp))
+            if (hasAbnormalStatus) {
+                // Show alert card
+                AlertCard(abnormalStatuses = abnormalStatuses)
+            } else {
+                // Show greetings and device status
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    Text("设备电量", style = TextStyle(fontSize = 15.sp))
-                    Icon(Icons.Filled.Battery4Bar, contentDescription = "电池电量")
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White.copy(alpha = 0.3f))
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("您好，⚫用户001", style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold))
                 }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White.copy(alpha = 0.3f))
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Text("设备已连接", style = TextStyle(fontSize = 15.sp))
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("设备电量", style = TextStyle(fontSize = 15.sp))
+                        Icon(Icons.Filled.Battery4Bar, contentDescription = "电池电量")
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
 
             // Button & Exercise View
             Row(
@@ -235,7 +254,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 VitalCardWithSwitch(
                     title = "我的体温",
                     value = "$temperature ℃",
-                    status = viewModel.getTemperatureStatus(temperature),
+                    status = temperatureStatus,
                     switchState = isTemperatureSwitchOn,
                     onSwitchChange = viewModel::updateTemperatureSwitch,
                     backgroundPainter = painterResource(R.drawable.centigrade),
@@ -244,7 +263,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 VitalCardWithSwitch(
                     title = "实时心率",
                     value = "$heartRate bpm",
-                    status = viewModel.getHeartRateStatus(heartRate),
+                    status = heartRateStatus,
                     switchState = isHeartRateSwitchOn,
                     onSwitchChange = viewModel::updateHeartRateSwitch,
                     backgroundPainter = painterResource(R.drawable.heart),
@@ -261,7 +280,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 VitalCardWithSwitch(
                     title = "血样浓度",
                     value = "$spo2 %",
-                    status = viewModel.getBloodOxygenStatus(spo2),
+                    status = bloodOxygenStatus,
                     switchState = isBloodOxygenSwitchOn,
                     onSwitchChange = viewModel::updateBloodOxygenSwitch,
                     backgroundPainter = painterResource(R.drawable.blood_oxygen),
@@ -270,13 +289,56 @@ fun HealthScreen(viewModel: HealthViewModel) {
                 VitalCardWithSwitch(
                     title = "我的血压",
                     value = "${systolicBloodPressure}/${diastolicBloodPressure} mmHg",
-                    status = viewModel.getBloodPressureStatus(systolicBloodPressure, diastolicBloodPressure),
+                    status = bloodPressureStatus,
                     switchState = isBloodPressureSwitchOn,
                     onSwitchChange = viewModel::updateBloodPressureSwitch,
                     backgroundPainter = painterResource(R.drawable.blood_pressure),
                     modifier = Modifier.weight(1f).padding(start = 8.dp)
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun AlertCard(abnormalStatuses: List<Pair<String, String>>) {
+    val isSingleAbnormal = abnormalStatuses.size == 1
+    val abnormalTitle = abnormalStatuses.firstOrNull()?.first ?: ""
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Red)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Filled.Warning,
+                    contentDescription = "警告",
+                    tint = Color.White
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = if (isSingleAbnormal) "${abnormalTitle}异常警告" else "多项异常警告",
+                    color = Color.White,
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = if (isSingleAbnormal) "目前您的${abnormalTitle}已超出您设置的正常区间" else "目前多个指标已超出您设置的正常区间",
+                color = Color.White,
+                style = MaterialTheme.typography.bodySmall
+            )
         }
     }
 }
@@ -300,12 +362,14 @@ fun VitalCardWithSwitch(
         uncheckedBorderColor = Color.Transparent,
     )
 
+    val cardBackgroundColor = if (status == "正常") Color.Transparent else Color.Red.copy(alpha = 0.7f)
+
     Card(
         modifier = modifier
             .fillMaxWidth()
             .height(210.dp),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent) // 透明背景
+        colors = CardDefaults.cardColors(containerColor = cardBackgroundColor)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             // Draw background image
@@ -317,7 +381,7 @@ fun VitalCardWithSwitch(
                     modifier = Modifier
                         .fillMaxHeight()
                         .fillMaxWidth(0.9f)
-                        .alpha(0.2f)
+                        .alpha(if (status == "正常") 0.2f else 0.1f) // 调整异常状态下的透明度
                         .align(Alignment.CenterStart)
                 )
             }
@@ -339,12 +403,28 @@ fun VitalCardWithSwitch(
                         modifier = Modifier.scale(1f),
                         colors = switchColors
                     )
-                    Text(text = "更多", style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        text = "更多",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if (status == "正常") Color.Black else Color.White
+                    )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = title, style = MaterialTheme.typography.bodyMedium)
-                Text(text = value, style = MaterialTheme.typography.headlineSmall)
-                Text(text = "状态: $status", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (status == "正常") Color.Black else Color.White
+                )
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = if (status == "正常") Color.Black else Color.White
+                )
+                Text(
+                    text = "状态: $status",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (status == "正常") Color.Gray else Color.White
+                )
             }
         }
     }
