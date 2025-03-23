@@ -21,6 +21,7 @@ class HealthViewModel : ViewModel() {
     private val _isBloodOxygenSwitchOn = MutableStateFlow(true)
     private val _isBloodPressureSwitchOn = MutableStateFlow(true)
 
+    // Getters
     val temperature: StateFlow<Double> = _temperature
     val heartRate: StateFlow<Int> = _heartRate
     val systolicBloodPressure: StateFlow<Int> = _systolicBloodPressure
@@ -33,10 +34,7 @@ class HealthViewModel : ViewModel() {
     val isBloodOxygenSwitchOn: StateFlow<Boolean> = _isBloodOxygenSwitchOn
     val isBloodPressureSwitchOn: StateFlow<Boolean> = _isBloodPressureSwitchOn
 
-    init {
-        startUpdatingData()
-    }
-
+    // Setters
     fun updateTemperatureSwitch(isOn: Boolean) {
         _isTemperatureSwitchOn.value = isOn
     }
@@ -51,6 +49,10 @@ class HealthViewModel : ViewModel() {
 
     fun updateBloodPressureSwitch(isOn: Boolean) {
         _isBloodPressureSwitchOn.value = isOn
+    }
+
+    init {
+        startUpdatingData()
     }
 
     private fun startUpdatingData() {
