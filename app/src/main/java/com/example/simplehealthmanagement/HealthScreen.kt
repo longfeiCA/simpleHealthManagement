@@ -31,6 +31,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
 // UI Entrance
 
@@ -71,6 +73,7 @@ fun HealthScreen(viewModel: HealthViewModel) {
         unselectedTextColor = Color.Black.copy(alpha = 0.3f)
     )
 
+    val scrollState = rememberScrollState()
 
     Scaffold(
         bottomBar = {
@@ -104,7 +107,8 @@ fun HealthScreen(viewModel: HealthViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (hasAbnormalStatus) {
